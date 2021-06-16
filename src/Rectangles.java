@@ -10,12 +10,12 @@ public class Rectangles extends Canvas{
     PApplet visualiser;
 
 
-    public Rectangles(int height, int x , int y, PApplet visualiser){
+    public Rectangles(int x , int y,int height, int width, PApplet visualiser){
         this.x = x;
         this.y =y;
         this.height = height;
         this.visualiser = visualiser;
-        this.width = 60;
+        this.width = width;
     }
 
     public void render(){
