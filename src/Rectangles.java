@@ -24,6 +24,11 @@ public class Rectangles extends Canvas{
         this.render();
     }
 
+    public void set_height(int new_height){
+        this.height = new_height;
+        this.render();
+    }
+
     public void render(){
         visualiser.rect(x , y, width , height);
         visualiser.fill(colour);
