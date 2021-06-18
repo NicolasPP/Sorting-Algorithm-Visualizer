@@ -1,6 +1,5 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
 
 
 public class SortingAlgorithms {
@@ -61,6 +60,9 @@ public class SortingAlgorithms {
             return merge(list1 , list2);
         }
     }
+
+
+
     public ArrayList <int []> selectionSort(int [] list){
         int size = list.length;
         ArrayList <int []> instructions= new ArrayList<>();

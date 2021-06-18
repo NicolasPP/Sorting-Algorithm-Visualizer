@@ -1,7 +1,5 @@
 import processing.core.PApplet;
 import controlP5.*;
-
-import java.awt.*;
 import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
@@ -9,16 +7,13 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     final int screenHeight = 1000;
     final int screenWidth = 1000;
     final int recWidth = (screenWidth / arr_len);
-    final int recHeightFactor = (int)((screenHeight/ arr_len) * 1);
+    final int recHeightFactor = (screenHeight/ arr_len);
     Rectangles [] rectanglesArray = new Rectangles[arr_len];
     int [] randomArray = new int[arr_len];
     int recHeight;
     int backGroundColour = 255;
     int counter = 0;
     final int delay = 60;
-    float alpha = 1.5F;
-
-
 
 
     public void settings(){
@@ -54,7 +49,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         }
     }
 
-
     public void controlEvent(ControlEvent theEvent) {
         String button = theEvent.getController().getName();
         if (counter > 1){
@@ -78,6 +72,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         counter++;
 
     }
+
     public void swapHeights(ArrayList <int []> instructions){
         Thread t = new Thread(()->{
             for (int [] instruction : instructions){
@@ -110,6 +105,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         }
         return randArr;
     }
+    
     public void stop(long milli){
         try
         {
