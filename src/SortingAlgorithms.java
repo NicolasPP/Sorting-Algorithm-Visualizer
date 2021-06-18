@@ -1,4 +1,6 @@
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 public class SortingAlgorithms {
@@ -59,11 +61,17 @@ public class SortingAlgorithms {
             return merge(list1 , list2);
         }
     }
-    public int [] selectionSort(int [] list){
+    public ArrayList <int []> selectionSort(int [] list){
         int size = list.length;
+        ArrayList <int []> instructions= new ArrayList<>();
+        int [] instruction = new int[4];
         while(size > 1){
+            for (int nums : list){
+                System.out.print(Integer.toString(nums) + " ");
+            }
+            System.out.println();
             int [] mutatedList = new int[size];
-                System.arraycopy(
+            System.arraycopy(
                         list,
                         0,
                         mutatedList,
@@ -73,14 +81,22 @@ public class SortingAlgorithms {
             int maximum = Arrays.stream(mutatedList).max().getAsInt();
             for (int i = 0; i < size ; i++){
                 if (list[i] == maximum){
+//                    System.out.println(list[i]);
+//                    System.out.println(list[size-1]);
+                    instruction[0] = i ;
+                    instruction[1] = size - 1;
+                    instruction[2] = list[i];
+                    instruction[3] = list[size - 1];
                     int temp = list[i];
                     list[i] = list[size-1];
                     list[size-1] = temp;
+                    instructions.add(instruction);
+                    break;
                 }
             }
             size--;
         }
-        return list;
+        return instructions;
     }
 
 }
