@@ -94,10 +94,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 smallerRec.set_colour(200);
                 opCounter = opCounter + opNum;
                 cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
-    //                stop(10);
-//                biggerRec.set_colour(0);
-//                smallerRec.set_colour(0);
-
                 stop(delay );
 
             }
