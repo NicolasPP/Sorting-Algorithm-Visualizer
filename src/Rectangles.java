@@ -16,7 +16,7 @@ public class Rectangles extends Canvas{
         this.height = height;
         this.visualiser = visualiser;
         this.width = width;
-        int color = 0;
+        int colour = 0;
 
     }
     public void set_colour(int value){

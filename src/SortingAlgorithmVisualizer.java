@@ -3,7 +3,8 @@ import controlP5.*;
 import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
-    final int arr_len = 200;
+    ControlP5 cp5;
+    final int arr_len = 500;
     final int screenHeight = 1000;
     final int screenWidth = 1000;
     final int recWidth = (screenWidth / arr_len);
@@ -12,8 +13,9 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     int [] randomArray = new int[arr_len];
     int recHeight;
     int backGroundColour = 255;
-    int counter = 0;
     final int delay = 60;
+    int opCounter =  0;
+    int buttonPressCounter = 0;
 
 
     public void settings(){
@@ -22,7 +24,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
 
     public void setup(){
         randomArray = randomArrayGenerator(arr_len);
-        ControlP5 cp5 = new ControlP5( this);
+        cp5 = new ControlP5( this);
         cp5.addButton("Randomise")
                 .setValue(0)
                 .setPosition(250 ,200)
@@ -31,6 +33,8 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 .setValue(0)
                 .setPosition(250 ,240)
                 .setSize(100, 20);
+        cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
+                .setColor(69);
         createRectangles();
         smooth();
         frameRate(200);
@@ -51,7 +55,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
 
     public void controlEvent(ControlEvent theEvent) {
         String button = theEvent.getController().getName();
-        if (counter > 1){
+        if (buttonPressCounter > 1){
             switch (button){
                 case "Randomise":
                     for (Rectangles recs : rectanglesArray){
@@ -64,12 +68,13 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                     draw();
                     break;
                 case "Solve":
+                    opCounter = 0;
                     SortingAlgorithms solver = new SortingAlgorithms();
                     ArrayList <int []> ins = solver.selectionSort(randomArray);
                     swapHeights(ins);
             }
         }
-        counter++;
+        buttonPressCounter++;
 
     }
 
@@ -78,17 +83,27 @@ public class SortingAlgorithmVisualizer extends  PApplet{
             for (int [] instruction : instructions){
                 int recBiggerIndex = instruction[0];
                 int recSmallerIndex = instruction[1];
+                int opNum = instruction[2];
                 Rectangles biggerRec = rectanglesArray[recBiggerIndex];
                 Rectangles smallerRec = rectanglesArray[recSmallerIndex];
                 int bigHeight = biggerRec.height;
                 int smallHeight = smallerRec.height;
                 biggerRec.set_height(smallHeight);
                 smallerRec.set_height(bigHeight);
-                stop(delay);
+                biggerRec.set_colour(200);
+                smallerRec.set_colour(200);
+                opCounter = opCounter + opNum;
+                cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
+    //                stop(10);
+//                biggerRec.set_colour(0);
+//                smallerRec.set_colour(0);
+
+                stop(delay );
 
             }
         });
         t.start();
+
     }
 
     public int [] randomArrayGenerator(int size){
@@ -105,7 +120,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         }
         return randArr;
     }
-    
+
     public void stop(long milli){
         try
         {

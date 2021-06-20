@@ -63,8 +63,10 @@ public class SortingAlgorithms {
 
 
 
-    public ArrayList <int []> selectionSort(int [] list){
+    public ArrayList <int []> selectionSort(int [] list ){
+        int counter = 1;
         int size = list.length;
+        counter++;
         ArrayList <int []> instructions= new ArrayList<>();
         while(size > 1){
             int [] mutatedList = new int[size];
@@ -75,20 +77,29 @@ public class SortingAlgorithms {
                         0,
                         size
                 );
+            counter = counter + size;
             int maximum = Arrays.stream(mutatedList).max().getAsInt();
+            counter = counter  + size ;
             for (int i = 0; i < size ; i++){
                 if (list[i] == maximum){
-                    int [] instruction = new int[2];
+                    counter++;
+                    int [] instruction = new int[3];
                     instruction[0] = i;
                     instruction[1] = size - 1;
                     int temp = list[i];
+                    counter++;
                     list[i] = list[size-1];
+                    counter++;
                     list[size-1] = temp;
+                    counter++;
+                    instruction[2] = counter;
                     instructions.add(instruction);
                     break;
                 }
+                counter = 0;
             }
             size--;
+            counter++;
         }
         return instructions;
     }
