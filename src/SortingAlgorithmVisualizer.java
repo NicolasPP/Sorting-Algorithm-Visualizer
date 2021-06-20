@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
     ControlP5 cp5;
-    final int arr_len = 500;
+    final int arr_len = 100;
     final int screenHeight = 1000;
     final int screenWidth = 1000;
     final int recWidth = (screenWidth / arr_len);
@@ -16,6 +16,8 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     final int delay = 60;
     int opCounter =  0;
     int buttonPressCounter = 0;
+
+
 
 
     public void settings(){
@@ -36,13 +38,11 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
                 .setColor(69);
         createRectangles();
-        smooth();
-        frameRate(200);
     }
     public void createRectangles(){
         for (int i = 0 ; i < arr_len ; i++){
             recHeight = - ( recHeightFactor + ( recHeightFactor * randomArray[i] ) );
-            rectanglesArray[i] = new Rectangles((i * recWidth), screenHeight ,recHeight, recWidth, this );
+            rectanglesArray[i] = new Rectangles((i * recWidth), screenHeight ,randomArray[i],recHeight, recWidth, this );
         }
     }
 
@@ -51,6 +51,8 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         for(Rectangles rec : rectanglesArray){
             rec.render();
         }
+        smooth();
+        frameRate(60);
     }
 
     public void controlEvent(ControlEvent theEvent) {
@@ -69,7 +71,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                     break;
                 case "Solve":
                     opCounter = 0;
-                    SortingAlgorithms solver = new SortingAlgorithms();
+                    SortingAlgorithms solver = new SortingAlgorithms(this);
                     ArrayList <int []> ins = solver.selectionSort(randomArray);
                     swapHeights(ins);
             }

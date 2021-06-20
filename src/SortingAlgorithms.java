@@ -3,6 +3,12 @@ import java.util.Arrays;
 
 
 public class SortingAlgorithms {
+    SortingAlgorithmVisualizer visualizer;
+
+    public SortingAlgorithms(SortingAlgorithmVisualizer visualizer){
+        this.visualizer = visualizer;
+
+    }
 
     public int[] merge(int [] list1 , int [] list2){
         int size1 = list1.length;
