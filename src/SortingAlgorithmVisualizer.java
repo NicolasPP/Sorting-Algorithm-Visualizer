@@ -11,13 +11,14 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     final int recHeightFactor = (screenHeight/ arr_len);
     Rectangles [] rectanglesArray = new Rectangles[arr_len];
     int [] randomArray = new int[arr_len];
-    int recHeight;
     int backGroundColour = 255;
-    final int delay = 60;
     int opCounter =  0;
     int buttonPressCounter = 0;
-
-
+    String [] algorithmList = {"Selection Sort" , "Merge Sort"};
+    ScrollableList scrollList;
+    int [] indexArray = new int[arr_len];
+    SortingAlgorithms solver = new SortingAlgorithms(this);
+    boolean solving = false;
 
 
     public void settings(){
@@ -37,13 +38,36 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 .setSize(100, 20);
         cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
                 .setColor(69);
+
+        scrollList = cp5.addScrollableList("dropdown")
+                .setPosition(250 , 280)
+                .setBarHeight(20)
+                .setItemHeight(20);
+        customizeScrollableList(scrollList);
+
+
         createRectangles();
     }
     public void createRectangles(){
         for (int i = 0 ; i < arr_len ; i++){
-            recHeight = - ( recHeightFactor + ( recHeightFactor * randomArray[i] ) );
-            rectanglesArray[i] = new Rectangles((i * recWidth), screenHeight ,randomArray[i],recHeight, recWidth, this );
+            rectanglesArray[i] = new Rectangles(
+                    (i * recWidth),
+                    screenHeight,
+                    randomArray[i],
+                    recHeightFactor,
+                    recWidth,
+                    this );
+            indexArray[randomArray[i]] = i;
         }
+    }
+
+    void customizeScrollableList(ScrollableList ddl){
+        ddl.setBackgroundColor(color(190));
+        ddl.setItemHeight(20);
+        ddl.setBarHeight(15);
+        ddl.addItems(algorithmList);
+        ddl.setColorBackground(color(60));
+        ddl.setColorActive(color(255, 128));
     }
 
     public void draw(){
@@ -51,8 +75,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         for(Rectangles rec : rectanglesArray){
             rec.render();
         }
-        smooth();
-        frameRate(60);
     }
 
     public void controlEvent(ControlEvent theEvent) {
@@ -60,6 +82,10 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         if (buttonPressCounter > 1){
             switch (button){
                 case "Randomise":
+                    if (solving){
+                        System.out.println("solving");
+                        break;
+                    }
                     for (Rectangles recs : rectanglesArray){
                         if (recs != null) {
                             recs.set_colour(backGroundColour);
@@ -68,40 +94,32 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                     randomArray = randomArrayGenerator(arr_len);
                     createRectangles();
                     draw();
+                    cp5.getController("Randomise");
                     break;
                 case "Solve":
+                    if (solving){
+                        System.out.println("already solving");
+                        break;
+                    }
+                    String algorithmName = scrollList.getLabel();
                     opCounter = 0;
-                    SortingAlgorithms solver = new SortingAlgorithms(this);
-                    ArrayList <int []> ins = solver.selectionSort(randomArray);
-                    swapHeights(ins);
+                    setAlgorithm(algorithmName);
+                    solving = true;
             }
         }
         buttonPressCounter++;
 
     }
 
-    public void swapHeights(ArrayList <int []> instructions){
-        Thread t = new Thread(()->{
-            for (int [] instruction : instructions){
-                int recBiggerIndex = instruction[0];
-                int recSmallerIndex = instruction[1];
-                int opNum = instruction[2];
-                Rectangles biggerRec = rectanglesArray[recBiggerIndex];
-                Rectangles smallerRec = rectanglesArray[recSmallerIndex];
-                int bigHeight = biggerRec.height;
-                int smallHeight = smallerRec.height;
-                biggerRec.set_height(smallHeight);
-                smallerRec.set_height(bigHeight);
-                biggerRec.set_colour(200);
-                smallerRec.set_colour(200);
-                opCounter = opCounter + opNum;
-                cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
-                stop(delay );
-
-            }
-        });
-        t.start();
-
+    public void setAlgorithm (String algorithm){
+        switch (algorithm){
+            case "Selection Sort":
+                randomArray = solver.selectionSort(randomArray);
+                break;
+            case "Merge Sort":
+                solver.mergeSort(randomArray);
+                break;
+        }
     }
 
     public int [] randomArrayGenerator(int size){
@@ -119,16 +137,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         return randArr;
     }
 
-    public void stop(long milli){
-        try
-        {
-            Thread.sleep(milli);
-        }
-        catch (InterruptedException ex)
-        {
-            Thread.currentThread().interrupt();
-        }
-    }
 
     public static void main(String[] args) {
         String [] processing  = {"SortingAlgorithmVisualizer"};
