@@ -4,36 +4,38 @@ import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
     ControlP5 cp5;
-    final int arr_len = 100;
+    final int arr_len = 200;
     final int screenHeight = 1000;
     final int screenWidth = 1000;
-    final int recWidth = (screenWidth / arr_len);
-    final int recHeightFactor = (screenHeight/ arr_len);
+    final float recWidth = ((float) screenWidth / (float) arr_len);
+    final float recHeightFactor = ((float)screenHeight/ (float)arr_len);
     Rectangles [] rectanglesArray = new Rectangles[arr_len];
     int [] randomArray = new int[arr_len];
     int backGroundColour = 255;
     int opCounter =  0;
-    int buttonPressCounter = 0;
-    String [] algorithmList = {"Selection Sort" , "Merge Sort"};
+    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort"};
     ScrollableList scrollList;
     int [] indexArray = new int[arr_len];
     SortingAlgorithms solver = new SortingAlgorithms(this);
     boolean solving = false;
+    boolean choose = false;
+
+
 
 
     public void settings(){
         size(screenWidth, screenHeight);
     }
 
+
+
     public void setup(){
         randomArray = randomArrayGenerator(arr_len);
         cp5 = new ControlP5( this);
         cp5.addButton("Randomise")
-                .setValue(0)
                 .setPosition(250 ,200)
                 .setSize(100, 20);
         cp5.addButton("Solve")
-                .setValue(0)
                 .setPosition(250 ,240)
                 .setSize(100, 20);
         cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
@@ -42,7 +44,9 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         scrollList = cp5.addScrollableList("dropdown")
                 .setPosition(250 , 280)
                 .setBarHeight(20)
-                .setItemHeight(20);
+                .setItemHeight(20)
+                .setValue(0)
+                .setOpen(false);
         customizeScrollableList(scrollList);
 
 
@@ -79,36 +83,38 @@ public class SortingAlgorithmVisualizer extends  PApplet{
 
     public void controlEvent(ControlEvent theEvent) {
         String button = theEvent.getController().getName();
-        if (buttonPressCounter > 1){
-            switch (button){
-                case "Randomise":
-                    if (solving){
-                        System.out.println("solving");
+        switch (button){
+            case "Randomise":
+                if (solving){
+                    System.out.println("solving");
                         break;
+                }
+                for (Rectangles recs : rectanglesArray){
+                    if (recs != null) {
+                        recs.set_colour(backGroundColour);
                     }
-                    for (Rectangles recs : rectanglesArray){
-                        if (recs != null) {
-                            recs.set_colour(backGroundColour);
-                        }
-                    }
-                    randomArray = randomArrayGenerator(arr_len);
-                    createRectangles();
-                    draw();
-                    cp5.getController("Randomise");
+                }
+                randomArray = randomArrayGenerator(arr_len);
+                createRectangles();
+                opCounter = 0;
+                cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
+                break;
+            case "Solve" :
+                String algorithmName = scrollList.getLabel();
+                if (!algorithmName.equals("dropdown")){
+                       choose = true;
+                }
+                if (solving){
+                    System.out.println("already solving");
                     break;
-                case "Solve":
-                    if (solving){
-                        System.out.println("already solving");
-                        break;
-                    }
-                    String algorithmName = scrollList.getLabel();
-                    opCounter = 0;
-                    setAlgorithm(algorithmName);
-                    solving = true;
+                }else if(!choose){
+                    System.out.println("Choose Algorithm");
+                    break;
+                }
+                opCounter = 0;
+                setAlgorithm(algorithmName);
+                solving = true;
             }
-        }
-        buttonPressCounter++;
-
     }
 
     public void setAlgorithm (String algorithm){
@@ -118,6 +124,9 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 break;
             case "Merge Sort":
                 solver.mergeSort(randomArray);
+                break;
+            case "Bubble Sort":
+                solver.bubbleSort(randomArray, arr_len);
                 break;
         }
     }
@@ -135,6 +144,19 @@ public class SortingAlgorithmVisualizer extends  PApplet{
             index++;
         }
         return randArr;
+    }
+
+
+    public void setGUIVisible(){
+        cp5.getController("Solve").setVisible(true);
+        cp5.getController("Randomise").setVisible(true);
+        cp5.getController("dropdown").setVisible(true);
+    }
+
+    public void setGUIInvisible(){
+        cp5.getController("Solve").setVisible(false);
+        cp5.getController("Randomise").setVisible(false);
+        cp5.getController("dropdown").setVisible(false);
     }
 
 

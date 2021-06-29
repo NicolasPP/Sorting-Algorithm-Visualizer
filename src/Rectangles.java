@@ -2,22 +2,22 @@ import processing.core.PApplet;
 import java.awt.*;
 
 public class Rectangles extends Canvas{
-    int x;
+    float x;
     int  y;
-    int height;
-    int width;
+    float height;
+    float width;
     PApplet visualiser;
     int colour;
     int value;
-    int heightFactor;
+    float heightFactor;
 
 
-    public Rectangles(int x , int y,int value,int heightFactor, int width, PApplet visualiser){
+    public Rectangles(float x , int y,int value,float heightFactor, float width, PApplet visualiser){
         this.heightFactor  = heightFactor;
         this.x = x;
         this.y =y;
         this.value = value;
-        this.height = -(heightFactor + (heightFactor*value));
+        this.height = -(heightFactor + (heightFactor*(float)value));
         this.visualiser = visualiser;
         this.width = width;
         this.colour = 0;
@@ -27,7 +27,7 @@ public class Rectangles extends Canvas{
     }
 
     public void swapHeights(Rectangles other){
-        int tempHeight = other.height;
+        float tempHeight = other.height;
         int tempValue = other.value;
         other.value = this.value;
         this.value = tempValue;
@@ -37,7 +37,7 @@ public class Rectangles extends Canvas{
 
     public void setHeight(int new_value){
         this.value = new_value;
-        this.height = -(heightFactor + (heightFactor*value));
+        this.height =  -(heightFactor + (heightFactor*(float)value));
 
     }
 
@@ -62,7 +62,8 @@ public class Rectangles extends Canvas{
     }
 
     public void render(){
-        visualiser.rect(x , y, width , height);
+//        visualiser.rect(x, y, width , height);
+        visualiser.quad( x ,  y , x +  width , y  , x + width , y + height  , x , y + height + heightFactor);
         visualiser.fill(colour);
 //        visualiser.stroke(255);
     }
