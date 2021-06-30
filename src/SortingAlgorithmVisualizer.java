@@ -13,12 +13,14 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     int [] randomArray = new int[arr_len];
     int backGroundColour = 255;
     int opCounter =  0;
-    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort"};
+    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort" , "Quick Sort"};
     ScrollableList scrollList;
     int [] indexArray = new int[arr_len];
     SortingAlgorithms solver = new SortingAlgorithms(this);
     boolean solving = false;
     boolean choose = false;
+    boolean solved = false;
+    Textlabel opCounterLabel;
 
 
 
@@ -38,7 +40,10 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         cp5.addButton("Solve")
                 .setPosition(250 ,240)
                 .setSize(100, 20);
-        cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
+
+
+
+        opCounterLabel = cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
                 .setColor(69);
 
         scrollList = cp5.addScrollableList("dropdown")
@@ -65,7 +70,14 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         }
     }
 
-    void customizeScrollableList(ScrollableList ddl){
+    public void updateCounter(int increment){
+        if(cp5.getController("counter") != null){
+            opCounter += increment;
+            cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
+        }
+    }
+
+    public void customizeScrollableList(ScrollableList ddl){
         ddl.setBackgroundColor(color(190));
         ddl.setItemHeight(20);
         ddl.setBarHeight(15);
@@ -94,15 +106,20 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                         recs.set_colour(backGroundColour);
                     }
                 }
+                solved = false;
+                updateCounter(0);
                 randomArray = randomArrayGenerator(arr_len);
                 createRectangles();
                 opCounter = 0;
-                cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
                 break;
             case "Solve" :
                 String algorithmName = scrollList.getLabel();
                 if (!algorithmName.equals("dropdown")){
                        choose = true;
+                }
+                if (solved){
+                    System.out.println("already solved, randomize");
+                    break;
                 }
                 if (solving){
                     System.out.println("already solving");
@@ -114,6 +131,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 opCounter = 0;
                 setAlgorithm(algorithmName);
                 solving = true;
+                solved = true;
             }
     }
 
@@ -127,6 +145,9 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 break;
             case "Bubble Sort":
                 solver.bubbleSort(randomArray, arr_len);
+                break;
+            case "Quick Sort":
+                solver.quickSort(randomArray);
                 break;
         }
     }

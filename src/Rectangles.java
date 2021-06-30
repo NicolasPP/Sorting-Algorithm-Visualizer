@@ -52,19 +52,17 @@ public class Rectangles extends Canvas{
         }
     }
 
-    public void tempColorChange(){
+    public void tempColorChange(int delay){
         Thread t = new Thread(()->{
             this.set_colour(255);
-            stop(60);
+            stop(delay);
             this.set_colour(0);
         });
         t.start();
     }
 
     public void render(){
-//        visualiser.rect(x, y, width , height);
         visualiser.quad( x ,  y , x +  width , y  , x + width , y + height  , x , y + height + heightFactor);
         visualiser.fill(colour);
-//        visualiser.stroke(255);
     }
 }

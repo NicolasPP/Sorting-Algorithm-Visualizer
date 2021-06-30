@@ -18,19 +18,24 @@ public class SortingAlgorithms {
         void sort(int [] unsortedArray , int leftIndex, int rightIndex);
     }
 
+    interface quickSorting{
+        int partition(int [] unsortedArray , int low , int high);
+        void qSort(int [] unsortedArray , int low , int high);
+    }
+
     public void mergeSort(int [] unsortedList){
         t = new Thread(()->{
             SortingAlgorithms.mergeSortInter solve = new SortingAlgorithms.mergeSortInter() {
                 @Override
                 public void merge(int [] unsortedArray , int middleIndex , int leftIndex , int rightIndex)
                 {
-                    visualizer.cp5.getController("counter").setValueLabel(Integer.toString(visualizer.opCounter));
                     // calculate size of each subArrays
 
                     int listSize1 = middleIndex - leftIndex + 1;
                     int listSize2 = rightIndex - middleIndex;
 
-                    visualizer.opCounter += 2;
+
+                    visualizer.updateCounter(2);
 
 
                     // create sub_arrays
@@ -38,20 +43,21 @@ public class SortingAlgorithms {
                     int [] subArray1 = new int[listSize1];
                     int [] subArray2 = new int[listSize2];
 
-                    visualizer.opCounter += 2;
+                    visualizer.updateCounter(2);
 
                     // fill subArrays with data
 
                     for (int i = 0 ; i < listSize1; i++){
                         subArray1[i] = unsortedArray[leftIndex + i];
+                        visualizer.updateCounter(1);
                     }
-                    visualizer.opCounter += listSize1;
+
 
                     for (int x = 0 ; x < listSize2; x++){
                         subArray2[x] = unsortedArray[middleIndex + 1 + x];
+                        visualizer.updateCounter(1);
                     }
 
-                    visualizer.opCounter += listSize2;
 
                     // merge subArrays
 
@@ -60,22 +66,22 @@ public class SortingAlgorithms {
 
                     int mergedIndex = leftIndex;
 
-                    visualizer.opCounter += 3;
+                    visualizer.updateCounter(3);
 
                     while (subArrayIndex1 < listSize1 && subArrayIndex2 < listSize2){
                         visualizer.opCounter++;
                         if (subArray1[subArrayIndex1] <= subArray2[subArrayIndex2]){
-                            visualizer.rectanglesArray[visualizer.indexArray[subArray1[subArrayIndex1]]].tempColorChange();
-                            visualizer.rectanglesArray[visualizer.indexArray[subArray2[subArrayIndex2]]].tempColorChange();
+                            visualizer.rectanglesArray[visualizer.indexArray[subArray1[subArrayIndex1]]].tempColorChange(delay);
+                            visualizer.rectanglesArray[visualizer.indexArray[subArray2[subArrayIndex2]]].tempColorChange(delay);
                             unsortedArray[mergedIndex] = subArray1[subArrayIndex1];
-                            visualizer.opCounter++;
+                            visualizer.updateCounter(1);
                             visualizer.rectanglesArray[mergedIndex].setHeight(subArray1[subArrayIndex1]);
                             stop(delay/3);
                             subArrayIndex1++;
                         }
                         else{
                             unsortedArray[mergedIndex] = subArray2[subArrayIndex2];
-                            visualizer.opCounter++;
+                            visualizer.updateCounter(1);
                             visualizer.rectanglesArray[mergedIndex].setHeight(subArray2[subArrayIndex2]);
                             stop(delay/3);
                             subArrayIndex2++;
@@ -88,26 +94,25 @@ public class SortingAlgorithms {
 
                     while(subArrayIndex1 < listSize1){
                         unsortedArray[mergedIndex] = subArray1[subArrayIndex1];
-                        visualizer.rectanglesArray[visualizer.indexArray[subArray1[subArrayIndex1]]].tempColorChange();
+                        visualizer.rectanglesArray[visualizer.indexArray[subArray1[subArrayIndex1]]].tempColorChange(delay);
                         visualizer.rectanglesArray[mergedIndex].setHeight(subArray1[subArrayIndex1]);
                         stop(delay/3);
                         subArrayIndex1++;
                         mergedIndex++;
-                        visualizer.opCounter+= 2;
+                        visualizer.updateCounter(2);
                     }
 
                     // writing whatever left of subArray2 if any
 
                     while (subArrayIndex2 < listSize2){
                         unsortedArray[mergedIndex] = subArray2[subArrayIndex2];
-                        visualizer.rectanglesArray[visualizer.indexArray[subArray2[subArrayIndex2]]].tempColorChange();
+                        visualizer.rectanglesArray[visualizer.indexArray[subArray2[subArrayIndex2]]].tempColorChange(delay);
                         visualizer.rectanglesArray[mergedIndex].setHeight(subArray2[subArrayIndex2]);
                         stop(delay/3);
-                        visualizer.opCounter+= 2;
+                        visualizer.updateCounter(2);
                         subArrayIndex2++;
                         mergedIndex++;
                     }
-                    visualizer.cp5.getController("counter").setValueLabel(Integer.toString(visualizer.opCounter));
 
 
                 }
@@ -117,10 +122,9 @@ public class SortingAlgorithms {
                 {
                     if (leftIndex < rightIndex){
                         int middleIndex = leftIndex + (rightIndex - leftIndex) / 2;// middle point
-                        visualizer.opCounter += 3;
+                        visualizer.updateCounter(3);
                         sort(unsortedArray , leftIndex , middleIndex); // sort first and second half
                         sort(unsortedArray , middleIndex + 1 , rightIndex);
-                        visualizer.cp5.getController("counter").setValueLabel(Integer.toString(visualizer.opCounter));
                         merge(unsortedArray,middleIndex, leftIndex, rightIndex); //merging sorted list
 
                     }
@@ -139,7 +143,7 @@ public class SortingAlgorithms {
     public int [] selectionSort(int [] list ){
         t = new Thread(()->{
             int size = list.length;
-            visualizer.opCounter++;
+            visualizer.updateCounter(1);
             while(size > 1){
                 int [] mutatedList = new int[size];
                 System.arraycopy(
@@ -150,30 +154,17 @@ public class SortingAlgorithms {
                         size
                 );
                 int maximum = Arrays.stream(mutatedList).max().getAsInt();
-                visualizer.opCounter = visualizer.opCounter  + size ;
+                visualizer.updateCounter(size);
                 for (int i = 0; i < size ; i++){
-                    visualizer.opCounter++;
+                    visualizer.updateCounter(1);
                     if (list[i] == maximum){
-                        visualizer.opCounter++;
-                        int temp = list[i];
-                        visualizer.opCounter++;
-                        list[i] = list[size-1];
-                        visualizer.opCounter++;
-                        list[size-1] = temp;
-                        visualizer.opCounter++;
-                        Rectangles max = visualizer.rectanglesArray[i];
-                        Rectangles other = visualizer.rectanglesArray[size-1];
-                        max.tempColorChange();
-                        other.tempColorChange();
-                        stop(delay);
-                        max.swapHeights(other);
-
+                        visualizer.updateCounter(1);
+                        swap(list , size -1  , i , delay , delay);
                         break;
                     }
                 }
                 size--;
-                visualizer.opCounter++;
-                visualizer.cp5.getController("counter").setValueLabel(Integer.toString(visualizer.opCounter));
+                visualizer.updateCounter(1);
             }
             visualizer.solving = false;
             visualizer.setGUIVisible();
@@ -187,21 +178,17 @@ public class SortingAlgorithms {
         t = new Thread(()->{
             int index;
             int index2;
-            int tempNum;
-            boolean swap;
+            boolean swapped;
 
             for (index = 0; index < size - 1; index++){
-                swap = false;
+                swapped = false;
                 for (index2 = 0; index2 < size - index - 1; index2++){
+                    visualizer.updateCounter(1);
                     if (unsortedArray[index2] > unsortedArray[index2 + 1]){
-                        tempNum = unsortedArray[index2];
-                        visualizer.rectanglesArray[index2].swapHeights(visualizer.rectanglesArray[index2 + 1]);
-                        stop(delay/60);
-                        unsortedArray[index2] = unsortedArray[index2 + 1 ];
-                        unsortedArray[index2 + 1] = tempNum;
-                        swap = true;
+                        swap(unsortedArray, index2, index2 + 1 , delay/60, delay/60);
+                        swapped = true;
                     }
-                }if (swap == false){
+                }if (!swapped){
                     break;
                 }
             }
@@ -210,6 +197,66 @@ public class SortingAlgorithms {
         });
         visualizer.setGUIInvisible();
         t.start();
+    }
+
+
+
+    public void quickSort(int [] list){
+        t = new Thread (() ->{
+            SortingAlgorithms.quickSorting solve = new quickSorting() {
+
+                @Override
+                public int partition(int[] unsortedArray, int low, int high) {
+
+                    int pivot = unsortedArray[high];
+
+
+                    int smallIndex = (low - 1);
+
+
+                    for (int i = low ; i <= high -1; i++ )
+                    {
+                        if (unsortedArray[i] < pivot){
+                            smallIndex++;
+                            swap(unsortedArray, smallIndex, i , delay/ 3 , delay /3);
+                        }
+                    }
+                    swap(unsortedArray, smallIndex + 1 , high , delay/ 3 , delay / 3);
+
+                    return (smallIndex + 1);
+                }
+
+                @Override
+                public void qSort(int[] unsortedArray, int low, int high) {
+                    if (low < high )
+                    {
+                        int partitioningIndex = partition(unsortedArray, low, high);
+                        qSort(unsortedArray, low , partitioningIndex - 1);
+                        qSort(unsortedArray, partitioningIndex + 1 , high);
+                    }
+
+                }
+            };
+            solve.qSort(list, 0 , list.length -1);
+            visualizer.solving = false;
+            visualizer.setGUIVisible();
+        });
+        visualizer.setGUIInvisible();
+        t.start();
+    }
+
+
+    public void swap(int[] array, int index1, int index2, int d , int d2) {
+        int tempVal = array[index1];
+        array[index1] = array[index2];
+        array[index2] = tempVal;
+        Rectangles rec1 = visualizer.rectanglesArray[index1];
+        Rectangles rec2 = visualizer.rectanglesArray[index2];
+        rec1.tempColorChange(d2);
+        rec2.tempColorChange(d2);
+        stop(d);
+        rec1.swapHeights(rec2);
+
     }
 
 
