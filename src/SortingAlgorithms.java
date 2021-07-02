@@ -19,8 +19,14 @@ public class SortingAlgorithms {
     }
 
     interface quickSorting{
+
         int partition(int [] unsortedArray , int low , int high);
         void qSort(int [] unsortedArray , int low , int high);
+    }
+
+    interface heapSortInter{
+        void sort(int [] unsortedArray);
+        void heap(int [] unsortedArray , int size , int rootNode);
     }
 
     public void mergeSort(int [] unsortedList){
@@ -189,7 +195,7 @@ public class SortingAlgorithms {
                         swapped = true;
                     }
                 }if (!swapped){
-                    break;
+                    break;  
                 }
             }
             visualizer.solving = false;
@@ -218,10 +224,10 @@ public class SortingAlgorithms {
                     {
                         if (unsortedArray[i] < pivot){
                             smallIndex++;
-                            swap(unsortedArray, smallIndex, i , delay/ 3 , delay /3);
+                            swap(unsortedArray, smallIndex, i , delay/ 2 , delay /3);
                         }
                     }
-                    swap(unsortedArray, smallIndex + 1 , high , delay/ 3 , delay / 3);
+                    swap(unsortedArray, smallIndex + 1 , high , delay/ 2 , delay / 3);
 
                     return (smallIndex + 1);
                 }
@@ -246,6 +252,57 @@ public class SortingAlgorithms {
     }
 
 
+    public void heapSort(int [] list){
+        t = new Thread (() -> {
+            SortingAlgorithms.heapSortInter solve = new heapSortInter() {
+                @Override
+                public void sort(int[] unsortedArray) {
+
+                    int size = unsortedArray.length;
+
+                    for (int rootNode = size / 2 - 1; rootNode >= 0; rootNode--) {
+                        heap(unsortedArray, size, rootNode);
+                    }
+
+                    for (int i = size - 1; i > 0; i--) {
+                        swap(unsortedArray, 0, i, delay/ 3, delay /3);
+                        heap(unsortedArray,i , 0);
+                    }
+
+
+                }
+
+                @Override
+                public void heap(int[] unsortedArray, int size, int rootNode) {
+                    int biggest = rootNode;
+                    int left = 2 * rootNode + 1;
+                    int right = 2 * rootNode + 2;
+
+                    if (left < size && unsortedArray[left] > unsortedArray[biggest]) {
+                        biggest = left;
+                    }
+
+                    if (right < size && unsortedArray[right] > unsortedArray[biggest]) {
+                        biggest = right;
+                    }
+
+                    if (biggest != rootNode) {
+                        swap(unsortedArray, rootNode, biggest, delay / 3, delay / 3);
+                        heap(unsortedArray,size, biggest);
+                    }
+
+
+                }
+            };
+            solve.sort(list);
+            visualizer.solving = false;
+            visualizer.setGUIVisible();
+        });
+        t.start();
+        visualizer.setGUIInvisible();
+    }
+
+
     public void swap(int[] array, int index1, int index2, int d , int d2) {
         int tempVal = array[index1];
         array[index1] = array[index2];
@@ -256,7 +313,6 @@ public class SortingAlgorithms {
         rec2.tempColorChange(d2);
         stop(d);
         rec1.swapHeights(rec2);
-
     }
 
 

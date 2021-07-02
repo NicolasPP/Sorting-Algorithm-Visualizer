@@ -4,16 +4,16 @@ import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
     ControlP5 cp5;
-    final int arr_len = 200;
+    final int arr_len = 100;
     final int screenHeight = 1000;
     final int screenWidth = 1000;
     final float recWidth = ((float) screenWidth / (float) arr_len);
     final float recHeightFactor = ((float)screenHeight/ (float)arr_len);
     Rectangles [] rectanglesArray = new Rectangles[arr_len];
     int [] randomArray = new int[arr_len];
-    int backGroundColour = 255;
+    int backGroundColour = 0;
     int opCounter =  0;
-    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort" , "Quick Sort"};
+    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort" , "Quick Sort", "Heap Sort"};
     ScrollableList scrollList;
     int [] indexArray = new int[arr_len];
     SortingAlgorithms solver = new SortingAlgorithms(this);
@@ -77,6 +77,8 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         }
     }
 
+
+
     public void customizeScrollableList(ScrollableList ddl){
         ddl.setBackgroundColor(color(190));
         ddl.setItemHeight(20);
@@ -90,6 +92,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         background(backGroundColour);
         for(Rectangles rec : rectanglesArray){
             rec.render();
+
         }
     }
 
@@ -107,10 +110,10 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                     }
                 }
                 solved = false;
+                opCounter = 0;
                 updateCounter(0);
                 randomArray = randomArrayGenerator(arr_len);
                 createRectangles();
-                opCounter = 0;
                 break;
             case "Solve" :
                 String algorithmName = scrollList.getLabel();
@@ -149,6 +152,9 @@ public class SortingAlgorithmVisualizer extends  PApplet{
             case "Quick Sort":
                 solver.quickSort(randomArray);
                 break;
+            case"Heap Sort":
+                solver.heapSort(randomArray);
+                break;
         }
     }
 
@@ -179,7 +185,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         cp5.getController("Randomise").setVisible(false);
         cp5.getController("dropdown").setVisible(false);
     }
-
 
     public static void main(String[] args) {
         String [] processing  = {"SortingAlgorithmVisualizer"};
