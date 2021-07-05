@@ -4,7 +4,7 @@ import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
     ControlP5 cp5;
-    final int arr_len = 100;
+    final int arr_len = 50;
     final int screenHeight = 1000;
     final int screenWidth = 1000;
     final float recWidth = ((float) screenWidth / (float) arr_len);
@@ -13,7 +13,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     int [] randomArray = new int[arr_len];
     int backGroundColour = 0;
     int opCounter =  0;
-    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort" , "Quick Sort", "Heap Sort"};
+    String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort" , "Quick Sort", "Heap Sort" , "Gnome Sort" , "Cocktail Sort"};
     ScrollableList scrollList;
     int [] indexArray = new int[arr_len];
     SortingAlgorithms solver = new SortingAlgorithms(this);
@@ -38,7 +38,11 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 .setPosition(250 ,200)
                 .setSize(100, 20);
         cp5.addButton("Solve")
+                .setColorLabel(color(0))
                 .setPosition(250 ,240)
+                .setColorForeground(color(200,100))
+                .setColorActive(color(100,100))
+                .setColorBackground(color(200,100))
                 .setSize(100, 20);
 
 
@@ -46,15 +50,13 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         opCounterLabel = cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
                 .setColor(69);
 
-        scrollList = cp5.addScrollableList("dropdown")
+        scrollList = cp5.addScrollableList("Algorithm")
                 .setPosition(250 , 280)
                 .setBarHeight(20)
                 .setItemHeight(20)
                 .setValue(0)
                 .setOpen(false);
         customizeScrollableList(scrollList);
-
-
         createRectangles();
     }
     public void createRectangles(){
@@ -76,7 +78,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
             cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
         }
     }
-
 
 
     public void customizeScrollableList(ScrollableList ddl){
@@ -117,7 +118,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 break;
             case "Solve" :
                 String algorithmName = scrollList.getLabel();
-                if (!algorithmName.equals("dropdown")){
+                if (!algorithmName.equals("Algorithm")){
                        choose = true;
                 }
                 if (solved){
@@ -155,6 +156,11 @@ public class SortingAlgorithmVisualizer extends  PApplet{
             case"Heap Sort":
                 solver.heapSort(randomArray);
                 break;
+            case"Gnome Sort":
+                solver.gnomeSort(randomArray, arr_len);
+                break;
+            case"Cocktail Sort":
+                solver.cocktailSort(randomArray);
         }
     }
 
@@ -177,13 +183,13 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     public void setGUIVisible(){
         cp5.getController("Solve").setVisible(true);
         cp5.getController("Randomise").setVisible(true);
-        cp5.getController("dropdown").setVisible(true);
+        cp5.getController("Algorithm").setVisible(true);
     }
 
     public void setGUIInvisible(){
         cp5.getController("Solve").setVisible(false);
         cp5.getController("Randomise").setVisible(false);
-        cp5.getController("dropdown").setVisible(false);
+        cp5.getController("Algorithm").setVisible(false);
     }
 
     public static void main(String[] args) {

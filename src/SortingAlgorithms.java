@@ -159,7 +159,8 @@ public class SortingAlgorithms {
                         0,
                         size
                 );
-                int maximum = Arrays.stream(mutatedList).max().getAsInt();
+//                int maximum = Arrays.stream(mutatedList).min().getAsInt();
+                int maximum = getMaximum(mutatedList);
                 visualizer.updateCounter(size);
                 for (int i = 0; i < size ; i++){
                     visualizer.updateCounter(1);
@@ -303,6 +304,76 @@ public class SortingAlgorithms {
     }
 
 
+    public void gnomeSort(int [] unsortedArray , int size){
+        t = new Thread (() -> {
+            int index = 0;
+
+            while(index < size){
+                if(index == 0)
+                {
+                    index++;
+                }
+                if (unsortedArray[index] >= unsortedArray[index -1])
+                {
+                    index++;
+                }
+                else
+                {
+                    swap(unsortedArray, index , index -1, delay/4 , delay/4);
+                    index--;
+                }
+            }
+
+            visualizer.solving = false;
+            visualizer.setGUIVisible();
+        });
+        t.start();
+        visualizer.setGUIInvisible();
+    }
+
+    public void cocktailSort(int [] unsortedArray){
+        t = new Thread (() -> {
+            boolean swapped = true;
+            int beginning = 0;
+            int end = unsortedArray.length;
+
+
+            while(swapped){
+                swapped = false;
+                for (int i = beginning; i < end - 1 ; i++)
+                {
+                    if (unsortedArray[i] >= unsortedArray[i + 1]){
+                        swap(unsortedArray , i, i + 1 , 1 , 1);
+                        swapped = true;
+                    }
+                }
+                if (swapped == false)
+                {
+                    break;
+                }
+                swapped = false;
+                end = end - 1;
+
+
+                for (int i = end -1 ; i >= beginning ; i --)
+                {
+                    if (unsortedArray[i] > unsortedArray[i + 1])
+                    {
+                        swap(unsortedArray, i , i + 1, 1, 1);
+                        swapped = true;
+                    }
+                }
+            }
+
+            visualizer.solving = false;
+            visualizer.setGUIVisible();
+        });
+        t.start();
+        visualizer.setGUIInvisible();
+
+    }
+
+
     public void swap(int[] array, int index1, int index2, int d , int d2) {
         int tempVal = array[index1];
         array[index1] = array[index2];
@@ -313,6 +384,17 @@ public class SortingAlgorithms {
         rec2.tempColorChange(d2);
         stop(d);
         rec1.swapHeights(rec2);
+    }
+
+    public int getMaximum(int [] arr){
+        int maximum = 0;
+        for (int i : arr){
+            if (maximum < i){
+                maximum = i;
+            }
+        }
+        return maximum;
+
     }
 
 
