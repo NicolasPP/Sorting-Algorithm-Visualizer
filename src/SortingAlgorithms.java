@@ -1,5 +1,3 @@
-import java.util.Arrays;
-
 public class SortingAlgorithms {
 
     // Sorting algorithms changed for visualisation.
@@ -347,7 +345,7 @@ public class SortingAlgorithms {
                         swapped = true;
                     }
                 }
-                if (swapped == false)
+                if (!swapped)
                 {
                     break;
                 }
