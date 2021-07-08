@@ -11,7 +11,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     float recHeightFactor = ((float)screenHeight/ (float)arr_len);
     Rectangles [] rectanglesArray = new Rectangles[arr_len];
     int [] randomArray = new int[arr_len];
-    int backGroundColour = 0;
+    int [] backGroundColour = {0,0,0};
     int opCounter =  0;
     String [] algorithmList = {"Selection Sort" , "Merge Sort", "Bubble Sort" , "Quick Sort", "Heap Sort" , "Gnome Sort" , "Cocktail Sort"};
     ScrollableList scrollList;
@@ -37,28 +37,28 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         randomArray = randomArrayGenerator(arr_len);
         cp5 = new ControlP5( this);
         cp5.addButton("Randomise")
-                .setColorLabel(color(0))
+                .setColorLabel(color(118,183,247))
                 .setPosition(30 ,50)
-                .setColorForeground(color(200,100))
+                .setColorForeground(color(125,166,208,100))
                 .setColorActive(color(100,100))
-                .setColorBackground(color(200,100))
+                .setColorBackground(color(125,166,208,100))
                 .setSize(100, 20);
         cp5.addButton("Solve")
-                .setColorLabel(color(0))
+                .setColorLabel(color(118,183,247))
                 .setPosition(30 ,80)
-                .setColorForeground(color(200,100))
+                .setColorForeground(color(125,166,208,100))
                 .setColorActive(color(100,100))
-                .setColorBackground(color(200,100))
+                .setColorBackground(color(125,166,208,100))
                 .setSize(100, 20);
 
 
         opCounterLabel = cp5
                 .addTextlabel("counter" , "Comparisons: " + opCounter , 30, 30 )
-                .setColor(69);
+                .setColor(color(118,183,247));
 
         arrLenLabel = cp5
-                .addTextlabel("arrLen","Array length: " + arr_len , 250 ,30)
-                .setColor(69);
+                .addTextlabel("arrLen","Array length: " + arr_len , 240 ,30)
+                .setColor(color(118,183,247));
 
 
 
@@ -70,6 +70,9 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 .setNumberOfTickMarks(451)
                 .showTickMarks(false)
                 .setPosition( num - 75 , 30)
+                .setColorForeground(color(118,183,247))
+                .setColorActive(color(71,129,188))
+                .setColorBackground(color(6,128,250))
                 .setLabelVisible(false)
                 .setTriggerEvent(2);
 
@@ -77,9 +80,6 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 .setPosition(30 , 110)
                 .setBarHeight(20)
                 .setItemHeight(20)
-                .setColorForeground(color(200,100))
-                .setColorActive(color(100,100))
-                .setColorBackground(color(200,100))
                 .setValue(0)
                 .setOpen(false);
         customizeScrollableList(scrollList);
@@ -109,16 +109,19 @@ public class SortingAlgorithmVisualizer extends  PApplet{
 
 
     public void customizeScrollableList(ScrollableList ddl){
-        ddl.setBackgroundColor(color(190));
         ddl.setItemHeight(20);
         ddl.setBarHeight(15);
+        ddl.setColorLabel(color(118,183,247));
+        ddl.setColorForeground(color(125,166,208,100));
+        ddl.setColorActive(color(100,100));
+        ddl.setColorBackground(color(125,166,208,100));
+        ddl.setColorValueLabel(color(118,183,247));
         ddl.addItems(algorithmList);
-        ddl.setColorBackground(color(60));
-        ddl.setColorActive(color(255, 128));
+
     }
 
     public void draw(){
-        background(backGroundColour);
+        background(backGroundColour[0] , backGroundColour[1] , backGroundColour[2]);
         for(Rectangles rec : rectanglesArray){
             rec.render();
 
@@ -135,7 +138,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 }
                 for (Rectangles recs : rectanglesArray){
                     if (recs != null) {
-                        recs.set_colour(backGroundColour);
+                        recs.colorChange(backGroundColour[0] , backGroundColour[1] , backGroundColour[2]);
                     }
                 }
                 solved = false;
@@ -166,22 +169,21 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 solved = true;
                 break;
             case "array Length":
-                if (!solving && arrLenSlider != null)
+                if (!solving)
                 {
-                    solved = false;
-                    arr_len = (int) arrLenSlider.getValue();
-                    indexArray = new int[arr_len];
-                    recWidth = ((float) screenWidth / (float) arr_len);
-                    recHeightFactor = ((float)screenHeight/ (float)arr_len);
-                    rectanglesArray = new Rectangles[arr_len];
-                    randomArray = new int[arr_len];
-                    randomArray = randomArrayGenerator(arr_len);
-                    arrLenLabel.setValue("Array length: " + arr_len);
-                    createRectangles();
-                }
-                else
-                {
-                    System.out.println("already solving why");
+                    if (arrLenSlider != null)
+                    {
+                        solved = false;
+                        arr_len = (int) arrLenSlider.getValue();
+                        indexArray = new int[arr_len];
+                        recWidth = ((float) screenWidth / (float) arr_len);
+                        recHeightFactor = ((float) screenHeight / (float) arr_len);
+                        rectanglesArray = new Rectangles[arr_len];
+                        randomArray = new int[arr_len];
+                        randomArray = randomArrayGenerator(arr_len);
+                        arrLenLabel.setValue("Array length: " + arr_len);
+                        createRectangles();
+                    }
                 }
                 break;
             }
@@ -231,13 +233,17 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     public void setGUIVisible(){
         cp5.getController("Solve").setVisible(true);
         cp5.getController("Randomise").setVisible(true);
-        cp5.getController("Algorithm").setVisible(true);
+        scrollList.setVisible(true);
+        arrLenSlider.setVisible(true);
+        arrLenLabel.setVisible(true);
     }
 
     public void setGUIInvisible(){
         cp5.getController("Solve").setVisible(false);
         cp5.getController("Randomise").setVisible(false);
-        cp5.getController("Algorithm").setVisible(false);
+        scrollList.setVisible(false);
+        arrLenSlider.setVisible(false);
+        arrLenLabel.setVisible(false);
     }
 
     public static void main(String[] args) {

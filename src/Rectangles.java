@@ -7,9 +7,11 @@ public class Rectangles extends Canvas{
     float height;
     float width;
     PApplet visualiser;
-    int colour;
     int value;
     float heightFactor;
+    int colorV1 = 255;
+    int colorV2 = 255;
+    int colorV3 = 255;
 
 
     public Rectangles(float x , int y,int value,float heightFactor, float width, PApplet visualiser){
@@ -20,10 +22,12 @@ public class Rectangles extends Canvas{
         this.height = -(heightFactor + (heightFactor*(float)value));
         this.visualiser = visualiser;
         this.width = width;
-        this.colour = 0;
     }
-    public void set_colour(int newColour){
-        this.colour = newColour;
+
+    public void colorChange(int v1 , int v2 , int v3){
+        this.colorV1 = v1;
+        this.colorV2 = v2;
+        this.colorV3 = v3;
     }
 
     public void swapHeights(Rectangles other){
@@ -54,16 +58,16 @@ public class Rectangles extends Canvas{
 
     public void tempColorChange(int delay){
         Thread t = new Thread(()->{
-            this.set_colour(255);
+            this.colorChange(118,183,247);
             stop(delay);
-            this.set_colour(0);
+            this.colorChange(255, 255 , 255);
         });
         t.start();
     }
 
     public void render(){
         visualiser.quad( x ,  y , x +  width , y  , x + width , y + height  , x , y + height + heightFactor);
-//        visualiser.fill(colour);
-        visualiser.stroke(255);
+        visualiser.fill(colorV1, colorV2, colorV3);
+        visualiser.stroke(colorV1, colorV2, colorV3);
     }
 }
