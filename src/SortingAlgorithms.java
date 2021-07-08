@@ -38,28 +38,20 @@ public class SortingAlgorithms {
                     int listSize1 = middleIndex - leftIndex + 1;
                     int listSize2 = rightIndex - middleIndex;
 
-
-                    visualizer.updateCounter(2);
-
-
                     // create sub_arrays
 
                     int [] subArray1 = new int[listSize1];
                     int [] subArray2 = new int[listSize2];
 
-                    visualizer.updateCounter(2);
-
                     // fill subArrays with data
 
                     for (int i = 0 ; i < listSize1; i++){
                         subArray1[i] = unsortedArray[leftIndex + i];
-                        visualizer.updateCounter(1);
                     }
 
 
                     for (int x = 0 ; x < listSize2; x++){
                         subArray2[x] = unsortedArray[middleIndex + 1 + x];
-                        visualizer.updateCounter(1);
                     }
 
 
@@ -70,22 +62,19 @@ public class SortingAlgorithms {
 
                     int mergedIndex = leftIndex;
 
-                    visualizer.updateCounter(3);
 
                     while (subArrayIndex1 < listSize1 && subArrayIndex2 < listSize2){
-                        visualizer.opCounter++;
                         if (subArray1[subArrayIndex1] <= subArray2[subArrayIndex2]){
+                            visualizer.updateCounter(1);
                             visualizer.rectanglesArray[visualizer.indexArray[subArray1[subArrayIndex1]]].tempColorChange(delay);
                             visualizer.rectanglesArray[visualizer.indexArray[subArray2[subArrayIndex2]]].tempColorChange(delay);
                             unsortedArray[mergedIndex] = subArray1[subArrayIndex1];
-                            visualizer.updateCounter(1);
                             visualizer.rectanglesArray[mergedIndex].setHeight(subArray1[subArrayIndex1]);
                             stop(delay/3);
                             subArrayIndex1++;
                         }
                         else{
                             unsortedArray[mergedIndex] = subArray2[subArrayIndex2];
-                            visualizer.updateCounter(1);
                             visualizer.rectanglesArray[mergedIndex].setHeight(subArray2[subArrayIndex2]);
                             stop(delay/3);
                             subArrayIndex2++;
@@ -103,7 +92,6 @@ public class SortingAlgorithms {
                         stop(delay/3);
                         subArrayIndex1++;
                         mergedIndex++;
-                        visualizer.updateCounter(2);
                     }
 
                     // writing whatever left of subArray2 if any
@@ -147,7 +135,6 @@ public class SortingAlgorithms {
     public int [] selectionSort(int [] list ){
         t = new Thread(()->{
             int size = list.length;
-            visualizer.updateCounter(1);
             while(size > 1){
                 int [] mutatedList = new int[size];
                 System.arraycopy(
@@ -157,11 +144,8 @@ public class SortingAlgorithms {
                         0,
                         size
                 );
-//                int maximum = Arrays.stream(mutatedList).min().getAsInt();
                 int maximum = getMaximum(mutatedList);
-                visualizer.updateCounter(size);
                 for (int i = 0; i < size ; i++){
-                    visualizer.updateCounter(1);
                     if (list[i] == maximum){
                         visualizer.updateCounter(1);
                         swap(list , size -1  , i , delay , delay);
@@ -169,7 +153,6 @@ public class SortingAlgorithms {
                     }
                 }
                 size--;
-                visualizer.updateCounter(1);
             }
             visualizer.solving = false;
             visualizer.setGUIVisible();
@@ -221,6 +204,7 @@ public class SortingAlgorithms {
 
                     for (int i = low ; i <= high -1; i++ )
                     {
+                        visualizer.updateCounter(1);
                         if (unsortedArray[i] < pivot){
                             smallIndex++;
                             swap(unsortedArray, smallIndex, i , delay/ 2 , delay /3);
@@ -277,14 +261,17 @@ public class SortingAlgorithms {
                     int left = 2 * rootNode + 1;
                     int right = 2 * rootNode + 2;
 
+                    visualizer.updateCounter(1);
                     if (left < size && unsortedArray[left] > unsortedArray[biggest]) {
                         biggest = left;
                     }
 
+                    visualizer.updateCounter(1);
                     if (right < size && unsortedArray[right] > unsortedArray[biggest]) {
                         biggest = right;
                     }
 
+                    visualizer.updateCounter(1);
                     if (biggest != rootNode) {
                         swap(unsortedArray, rootNode, biggest, delay / 3, delay / 3);
                         heap(unsortedArray,size, biggest);
@@ -311,6 +298,7 @@ public class SortingAlgorithms {
                 {
                     index++;
                 }
+                visualizer.updateCounter(1);
                 if (unsortedArray[index] >= unsortedArray[index -1])
                 {
                     index++;
@@ -340,6 +328,7 @@ public class SortingAlgorithms {
                 swapped = false;
                 for (int i = beginning; i < end - 1 ; i++)
                 {
+                    visualizer.updateCounter(1);
                     if (unsortedArray[i] >= unsortedArray[i + 1]){
                         swap(unsortedArray , i, i + 1 , 1 , 1);
                         swapped = true;
@@ -355,6 +344,7 @@ public class SortingAlgorithms {
 
                 for (int i = end -1 ; i >= beginning ; i --)
                 {
+                    visualizer.updateCounter(1);
                     if (unsortedArray[i] > unsortedArray[i + 1])
                     {
                         swap(unsortedArray, i , i + 1, 1, 1);
@@ -387,6 +377,7 @@ public class SortingAlgorithms {
     public int getMaximum(int [] arr){
         int maximum = 0;
         for (int i : arr){
+            visualizer.updateCounter(1);
             if (maximum < i){
                 maximum = i;
             }

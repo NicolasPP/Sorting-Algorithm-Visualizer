@@ -4,11 +4,11 @@ import java.util.*;
 
 public class SortingAlgorithmVisualizer extends  PApplet{
     ControlP5 cp5;
-    final int arr_len = 50;
+    int arr_len = 100;
     final int screenHeight = 1000;
     final int screenWidth = 1000;
-    final float recWidth = ((float) screenWidth / (float) arr_len);
-    final float recHeightFactor = ((float)screenHeight/ (float)arr_len);
+    float recWidth = ((float) screenWidth / (float) arr_len);
+    float recHeightFactor = ((float)screenHeight/ (float)arr_len);
     Rectangles [] rectanglesArray = new Rectangles[arr_len];
     int [] randomArray = new int[arr_len];
     int backGroundColour = 0;
@@ -21,6 +21,8 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     boolean choose = false;
     boolean solved = false;
     Textlabel opCounterLabel;
+    Slider arrLenSlider;
+    Textlabel arrLenLabel;
 
 
 
@@ -35,30 +37,56 @@ public class SortingAlgorithmVisualizer extends  PApplet{
         randomArray = randomArrayGenerator(arr_len);
         cp5 = new ControlP5( this);
         cp5.addButton("Randomise")
-                .setPosition(250 ,200)
+                .setColorLabel(color(0))
+                .setPosition(30 ,50)
+                .setColorForeground(color(200,100))
+                .setColorActive(color(100,100))
+                .setColorBackground(color(200,100))
                 .setSize(100, 20);
         cp5.addButton("Solve")
                 .setColorLabel(color(0))
-                .setPosition(250 ,240)
+                .setPosition(30 ,80)
                 .setColorForeground(color(200,100))
                 .setColorActive(color(100,100))
                 .setColorBackground(color(200,100))
                 .setSize(100, 20);
 
 
-
-        opCounterLabel = cp5.addTextlabel("counter" , Integer.toString(opCounter) , 30, 30 )
+        opCounterLabel = cp5
+                .addTextlabel("counter" , "Comparisons: " + opCounter , 30, 30 )
                 .setColor(69);
 
+        arrLenLabel = cp5
+                .addTextlabel("arrLen","Array length: " + arr_len , 250 ,30)
+                .setColor(69);
+
+
+
+        int num = cp5.getController("counter").getWidth();
+        arrLenSlider = cp5
+                .addSlider("array Length")
+                .setRange(50 , 500)
+                .setValue(100)
+                .setNumberOfTickMarks(451)
+                .showTickMarks(false)
+                .setPosition( num - 75 , 30)
+                .setLabelVisible(false)
+                .setTriggerEvent(2);
+
         scrollList = cp5.addScrollableList("Algorithm")
-                .setPosition(250 , 280)
+                .setPosition(30 , 110)
                 .setBarHeight(20)
                 .setItemHeight(20)
+                .setColorForeground(color(200,100))
+                .setColorActive(color(100,100))
+                .setColorBackground(color(200,100))
                 .setValue(0)
                 .setOpen(false);
         customizeScrollableList(scrollList);
+        arr_len = (int) arrLenSlider.getValue();
         createRectangles();
     }
+
     public void createRectangles(){
         for (int i = 0 ; i < arr_len ; i++){
             rectanglesArray[i] = new Rectangles(
@@ -75,7 +103,7 @@ public class SortingAlgorithmVisualizer extends  PApplet{
     public void updateCounter(int increment){
         if(cp5.getController("counter") != null){
             opCounter += increment;
-            cp5.getController("counter").setValueLabel(Integer.toString(opCounter));
+            cp5.getController("counter").setValueLabel("Comparisons: " + opCounter);
         }
     }
 
@@ -136,6 +164,26 @@ public class SortingAlgorithmVisualizer extends  PApplet{
                 setAlgorithm(algorithmName);
                 solving = true;
                 solved = true;
+                break;
+            case "array Length":
+                if (!solving && arrLenSlider != null)
+                {
+                    solved = false;
+                    arr_len = (int) arrLenSlider.getValue();
+                    indexArray = new int[arr_len];
+                    recWidth = ((float) screenWidth / (float) arr_len);
+                    recHeightFactor = ((float)screenHeight/ (float)arr_len);
+                    rectanglesArray = new Rectangles[arr_len];
+                    randomArray = new int[arr_len];
+                    randomArray = randomArrayGenerator(arr_len);
+                    arrLenLabel.setValue("Array length: " + arr_len);
+                    createRectangles();
+                }
+                else
+                {
+                    System.out.println("already solving why");
+                }
+                break;
             }
     }
 

@@ -63,7 +63,7 @@ public class Rectangles extends Canvas{
 
     public void render(){
         visualiser.quad( x ,  y , x +  width , y  , x + width , y + height  , x , y + height + heightFactor);
-        visualiser.fill(colour);
+//        visualiser.fill(colour);
         visualiser.stroke(255);
     }
 }
